@@ -1,0 +1,333 @@
+
+{% extends 'myapp/index.html' %}
+
+{% load static %}
+    
+
+{% block content %}
+    
+    <section class="hero hero-normal">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="hero__categories">
+                        <div class="hero__categories__all">
+                            <i class="fa fa-bars"></i>
+                            <span>All departments</span>
+                        </div>
+                        <ul>
+                            <li><a href="#">Fresh Meat</a></li>
+                            <li><a href="#">Vegetables</a></li>
+                            <li><a href="#">Fruit & Nut Gifts</a></li>
+                            <li><a href="#">Fresh Berries</a></li>
+                            <li><a href="#">Ocean Foods</a></li>
+                            <li><a href="#">Butter & Eggs</a></li>
+                            <li><a href="#">Fastfood</a></li>
+                            <li><a href="#">Fresh Onion</a></li>
+                            <li><a href="#">Papayaya & Crisps</a></li>
+                            <li><a href="#">Oatmeal</a></li>
+                            <li><a href="#">Fresh Bananas</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-9">
+                    <div class="hero__search">
+                        <div class="hero__search__form">
+                            <form action="#">
+                                <div class="hero__search__categories">
+                                    All Categories
+                                    <span class="arrow_carrot-down"></span>
+                                </div>
+                                <input type="text" placeholder="What do yo u need?">
+                                <button type="submit" class="site-btn">SEARCH</button>
+                            </form>
+                        </div>
+                        <div class="hero__search__phone">
+                            <div class="hero__search__phone__icon">
+                                <i class="fa fa-phone"></i>
+                            </div>
+                            <div class="hero__search__phone__text">
+                                <h5>+65 11.188.888</h5>
+                                <span>support 24/7 time</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+   
+    <section class="breadcrumb-section set-bg" data-setbg="{% static  'img/breadcrumb.jpg' %}">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <div class="breadcrumb__text">
+                        <h2>Checkout</h2>
+                        <div class="breadcrumb__option">
+                            <a href="{% url 'index' %}">Home</a>
+                            <span>Checkout</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+   
+
+    <section class="checkout spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h6><span class="icon_tag_alt"></span> Have a coupon? <a href="#">Click here</a> to enter your code
+                    </h6>
+                </div>
+            </div>
+
+
+            {% comment %} <a href="{% url 'address' %}" class="btn btn-primary">Address</a> {% endcomment %}
+            <div class="checkout__form">
+
+
+
+
+                 {% if sid %}
+                <div class="alert alert-success" role="alert">
+                     {{sid}}
+                  </div>
+
+                  {% endif %}
+                
+                
+                  <h4>Billing Details</h4>
+               <form action="{% url 'address' %}" method="post">
+                    {% csrf_token %}
+
+                    <div class="row">
+                        <div class="col-lg-8 col-md-6">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="checkout__input">
+                                        <p>Fist Name<span>*</span></p>
+                                        <input type="text" name="fist_name" placeholder="fistname" required>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="checkout__input">
+                                        <p>Last Name<span>*</span></p>
+                                        <input type="text" name="last_name" placeholder="lastname" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="checkout__input">
+                                <p>Country<span>*</span></p>
+                                <input type="text" name="country" placeholder="country" required>
+                            </div>
+                            <div class="checkout__input">
+                                <p>Address<span>*</span></p>
+                                <input type="text" placeholder="Street Address" name="Saddress" class="checkout__input__add" required>
+                                <input type="text" placeholder="Apartment, suite, unite ect (optinal)" name="Aaddress" required>
+                            </div>
+                            <div class="checkout__input">
+                                <p>Town/City<span>*</span></p>
+                                <input type="text" name="town_city" placeholder="Town/City" required>
+                            </div>
+                            <div class="checkout__input">
+                                <p>Country/State<span>*</span></p>
+                                <input type="text" name="Country_State" placeholder="Country/State" required>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="checkout__input">
+                                        <p>Phone<span>*</span></p>
+                                        <input type="text" name="phon" placeholder="Enter Phone Number"required>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="checkout__input">
+                                        <p>Email<span>*</span></p>
+                                        <input type="text" name="email" placeholder="Enter The Email" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="submit" value="Send" class="btn btn-primary">
+                           
+                        
+                            
+                           
+                            
+                            
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="checkout__order">
+                                <h4>Your Order</h4>
+                                <div class="checkout__order__products">Products <span>Total</span></div>
+                                <ul>
+                                    {% for x in prod %}
+                                    
+                                    <li>{{x.name}} <span>{{x.total_price}}</span></li>
+                                    
+                                    {% endfor %}
+                                </ul>
+                                <div class="checkout__order__subtotal">Subtotal <span>${{sub_total}}</span></div>
+                                <div class="checkout__order__total">Total <span>${{total}}</span></div>
+                                <div class="checkout__input__checkbox">
+                                    <label for="acc-or">
+                                        Create an account?
+                                        <input type="checkbox" id="acc-or">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                                <p>Lorem ipsum dolor sit amet, consectetur adip elit, sed do eiusmod tempor incididunt
+                                    ut labore et dolore magna aliqua.</p>
+                                <div class="checkout__input__checkbox">
+                                    <label for="payment">
+                                        Check Payment
+                                        <input type="checkbox" id="payment">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                                <div class="checkout__input__checkbox">
+                                    <label for="paypal">
+                                        Paypal
+                                        <input type="checkbox" id="paypal">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form> 
+
+
+
+
+
+
+
+                  <!--================End Home Banner Area =================-->
+<form action="/checkout/">
+    <!--================Checkout Area =================-->
+    <section class="checkout_area section_gap">
+      <center>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <h3 class="dart-pb-20">Your Order</h3>
+                        <table class="table cart checkout" border="1">
+                            <thead>
+                                <tr>
+                                    <th class="cart-product-thumbnail">Product</th>
+                                    <th class="cart-product-name">Name</th>
+                                    <th class="cart-product-quantity">Quantity</th>
+                                    <th class="cart-product-subtotal">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for x in prod %}
+                                <tr class="cart_item">
+
+                                    <td class="cart-product-thumbnail">
+                                        <a href="#"><img width="64" height="64" src="{{x.pic.url}}"
+                                                alt="Pink Printed Dress"></a>
+                                    </td>
+
+                                    <td class="cart-product-name">
+                                        <a href="#">{{x.name}}</a>
+                                    </td>
+
+                                    <td class="quantity">
+                                        <span>{{x.quantuty}}</span>
+                                    </td>
+
+                                    <td class="cart-product-subtotal">
+                                        <span class="amount">{{x.total_price}}</span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div> 
+                </div>
+
+             
+                <div class="col-md-12">
+                    <div class="table-responsive totle-cart">
+                        <h3>Cart Total</h3>
+                        <table class="table cart" border="1"> 
+                        
+                            <tbody>
+                                <tr class="cart_item cart_totle">
+                                    <td class="cart-product-name">
+                                        <strong>Cart Subtotal</strong>
+                                    </td>
+
+                                    <td class="cart-product-name">
+                                        <span class="amount">Rs.{{sub_total}}</span>
+                                    </td>
+                                </tr>
+                                <tr class="cart_item cart_totle">
+                                    <td class="cart-product-name">
+                                        <strong>Shipping</strong>
+                                    </td>
+                                    <td class="cart-product-name">
+                                        <span class="amount"> Rs.50</span>
+                                    </td> 
+                                </tr>
+                                <tr class="cart_item cart_totle">
+                                    <td class="cart-product-name">
+                                        <strong>Total</strong>
+                                    </td>
+                                    <td class="cart-product-name">
+                                        <span class="blue"><strong>Rs.{{total}}</strong></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>    
+                </div>
+                
+                
+                <div class="payments-options">
+                    <ul class="list-unstyled">
+                        <li>
+                            <label for="payment_method_paypal" id="paypal-transfer">
+                                <input required type="radio" data-order_button_text="Proceed to PayPal" value="bacs"
+                                    name="payment_method" class="input-radio" id="payment_method_paypal">
+                                Paypal payment <img src="" alt="">
+                            </label>
+                            <div class="paypal-transfer-msg">
+                                <p>Pay via PayPal; you can pay with your credit card if you don't have a PayPal
+                                    account.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+               
+                
+                <div class="col-md-12">
+                  <button type="submit" class="btn btn-primary">Place Order</button>
+              </div>
+                 
+              </div><base href="">
+          </div>
+      </center>
+      </section>
+      <script src="https://checkout.razorpay.com/v1/checkout.js" data-key="rzp_test_bilBagOBVTi4lE"
+          data-amount={{response.amount}} data-currency={{response.currency}} 
+          data-buttontext="Pay with Razorpay" data-name="{{request.user}}" data-theme.color="#F37254" data-description=""
+          data-image="" data-prefill.name={{request.user.username}} data-prefill.email={{request.user.email}}>
+     </script>
+      <input type="hidden" custom="Hidden Element" name="hidden">
+  
+   </script>
+</form> 
+            </div>
+        </div>
+    </section>
+
+    {% endblock %}
+    
+   
