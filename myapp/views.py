@@ -9,9 +9,9 @@ import random
 
 def index(request):
      if "email" in request.session:
-
+         
         uid = User.objects.get(email=request.session['email'])
-        lid = Add_to_cart.objects.all().count()
+        lid = Add_to_cart.objects.filter(user_id=uid).count()
         mid=maincatagory.objects.all()
         pid = Add_product.objects.all()
         context ={
@@ -21,9 +21,7 @@ def index(request):
             'lid' : lid
         }
         return render(request, "myapp/index.html",context)
-
      else:
-    
         return render(request, "myapp/login.html")
         
 def login(request):
@@ -156,24 +154,27 @@ def comefrom_password(request):
 
 
 def contact(request):
-    lid = Add_to_cart.objects.all().count()
+    uid = User.objects.get(email=request.session['email'])
+    lid = Add_to_cart.objects.filter(user_id=uid).count()
     context ={
+        
         'lid' : lid
     }
     return render(request, "myapp/contact.html",context)
 
 
 def blog_details(request):
-    lid = Add_to_cart.objects.all().count()
+    uid = User.objects.get(email=request.session['email'])
+    lid = Add_to_cart.objects.filter(user_id=uid).count()
     context ={
 
         'lid' : lid
-
     }
     return render(request, "myapp/blog_details.html",context)
 
-def blog(request):    
-    lid = Add_to_cart.objects.all().count()
+def blog(request):   
+    uid = User.objects.get(email=request.session['email']) 
+    lid = Add_to_cart.objects.filter(user_id=uid).count()
     context ={
         'lid' : lid
     }
@@ -181,7 +182,9 @@ def blog(request):
 
 
 def single_product(request):
-    lid = Add_to_cart.objects.all().count()
+    uid = User.objects.get(email=request.session['email'])
+    lid = Add_to_cart.objects.filter(user_id=uid).count()
+    mid = maincatagory.objects.all()
 
 
     pid = Add_product.objects.all()
@@ -190,17 +193,60 @@ def single_product(request):
         
         'pid' : pid,
         'lid' : lid,
+        'mid' : mid
     }
     return render(request, "myapp/single_product.html",context)
 
 
 
 
-def shoping_cart(request):
+def shop_details(request,id):
+    uid = User.objects.get(email=request.session['email'])
+    lid = Add_to_cart.objects.filter(user_id=uid).count()
+    pid = Add_product.objects.filter(id=id)
+    
+    context ={
+        'pid' : pid,
+        'lid' : lid
+    }
+    return render(request, "myapp/shop_details.html",context)
 
-    cid = Add_to_cart.objects.all()
-    prod = Add_to_cart.objects.all()
-    lid = Add_to_cart.objects.all().count()
+def add_to_cart(request,id):
+
+    if "email" in request.session:
+        uid = User.objects.get(email=request.session['email'])
+        pid = Add_product.objects.get(id=id)
+        pcid = Add_to_cart.objects.filter(product_id=pid,user_id=uid).exists()
+
+        if pcid:
+            pcid = Add_to_cart.objects.get(product_id=pid)
+            pcid.quantuty = pcid.quantuty+1
+            pcid.total_price = pcid.quantuty * pcid.price
+            pcid.save()
+            
+            return redirect("shoping_cart")
+    
+        else:
+            Add_to_cart.objects.create(user_id=uid,
+                                    product_id = pid,
+                                    pic = pid.pic,
+                                    price=pid.price,
+                                    name=pid.name,
+                                    total_price=pid.quantuty *pid.price        
+            )
+
+            return redirect("shoping_cart")
+    else:
+        return redirect("shoping_cart")
+        
+        
+
+
+def shoping_cart(request):
+    uid = User.objects.get(email=request.session['email'])
+    cid = Add_to_cart.objects.filter(user_id=uid)
+    prod = Add_to_cart.objects.filter(user_id=uid)
+    lid = Add_to_cart.objects.filter(user_id=uid).count()
    
     list1=[]
     sub_total=0
@@ -221,23 +267,6 @@ def shoping_cart(request):
     }
     return render(request, "myapp/shoping_cart.html",context)
 
-
-
-def add_to_cart(request,id):
-    if "email" in request.session:
-        uid = User.objects.get(email=request.session['email'])
-    
-
-        pid = Add_product.objects.get(id=id)
-        Add_to_cart.objects.create(user_id=uid,
-                                   product_id = pid,
-                                   pic = pid.pic,
-                                   price=pid.price,
-                                   name=pid.name,
-                                   total_price=pid.quantuty *pid.price        
-        )
-
-        return redirect("shoping_cart")
 
 
 def puls(request,id):
@@ -273,97 +302,160 @@ def remov(request,id):
 
 
 def checkout(request):
-    prod = Add_to_cart.objects.all()
-    lid = Add_to_cart.objects.all().count()
-   
-   
-    list1=[]
-    sub_total=0
+    uid = User.objects.get(email = request.session['email'])
+    lid = Add_to_cart.objects.filter(user_id=uid).count()
+    ctid = Add_to_cart.objects.filter()
+    prod = Add_to_cart.objects.filter(user_id=uid)
+
+    list1 = []
+    sub_total = 0
     total = 1
-    for x in prod:
-        z=x.price * x.quantuty
-        list1.append(z)
-        sub_total = sum(list1)
+    
+    try:
+        for i in prod:
+            z = i.price * i.quantuty
+            list1.append(z)
+            a = sum(list1)
+        sub_total = sub_total + a 
         total = sub_total + 50
-       
-    amount = total*100 
-    client = razorpay.Client(auth=('rzp_test_bilBagOBVTi4lE','77yKq3N9Wul97JVQcjtIVB5z'))
-    response = client.order.create({
-
-                                    'amount':amount,
-                                   'currency':'INR',
-                                   'payment_capture':1
-
-    
-    })
-    print(response,"****************************************")
-   
-    con = {
-            'prod':prod,
-            'sub_total':sub_total,
-            'total':total,
-            'response':response,
-            "lid" : lid
             
-    }
-   
-    
-    return render(request, "myapp/checkout.html",con)
+        amount = total*100 
+        client = razorpay.Client(auth=('rzp_test_bilBagOBVTi4lE','77yKq3N9Wul97JVQcjtIVB5z'))
+        response = client.order.create({
 
-
-def shop_details(request,id):
-    
-    
-    pid = Add_product.objects.filter(id=id)
-    
-
-
-    context ={
-        'pid' : pid
-    }
-    return render(request, "myapp/shop_details.html",context)
-
-    
-def address(request):
-    uid = User.objects.get(email=request.session['email'])
-    
-    if request.POST:
-        fist_name = request.POST['fist_name']
-        last_name =request.POST['last_name']
-        country = request.POST['country']
-        Saddress = request.POST['Saddress']
-        Aaddress = request.POST['Aaddress']
-        town_city = request.POST['town_city']
-        Country_State = request.POST['Country_State']
-        phon = request.POST['phon']
-        email = request.POST['email']
-
-
-        aid = Address.objects.create(user_id=uid,
-                                     fist_name=fist_name,
-                                     last_name= last_name,
-                                     country=country,
-                                     Saddress=Saddress,
-                                     Aaddress= Aaddress,
-                                     town_city=town_city,
-                                     Country_State=Country_State,
-                                     phon=phon,
-                                     email=email 
+                                        'amount':amount,
+                                    'currency':'INR',
+                                    'payment_capture':1
         
-        )
+        })
+            
+        con = {
+            'lid' : lid,
+            'ctid' : ctid,
+            'prod' : prod,
+            'response' : response,
+            'total' : total,
+            'sub_total' : sub_total
+        }
+        for i in prod:
+            print("-----------------------------",i)
+            Order.objects.create(user_id = uid,
+                                name = i.name,
+                                qty = i.quantuty,
+                                price = i.price)
+        
+        return render(request,"myapp/checkout.html",con)
 
-        # context ={
+    except:
+        amount = total*100 
+        client = razorpay.Client(auth=('rzp_test_bilBagOBVTi4lE','77yKq3N9Wul97JVQcjtIVB5z'))
+        response = client.order.create({
 
-        #     'uid' : uid,
-        #     'sid' : "Address add sussesfull........."
+                                        'amount':amount,
+                                    'currency':'INR',
+                                    'payment_capture':1
+        
+        })
+        
+        con = {
+            'lid' : lid,
+            'ctid' : ctid,
+            'prod' : prod,
+            'total' : total,
+            'response' : response,
+            'sub_total' : sub_total
+        }
+        
+        return render(request,"myapp/checkout.html",con)
 
-        # }
+def order(request):
+    uid = User.objects.get(email = request.session['email'])
+    oid = Order.objects.filter(user_id=uid)
+    aid = Address.objects.filter(user_id=uid)
+    did = Add_to_cart.objects.all().delete()
+    
+    con = {
+        'oid' : oid,
+        'aid' : aid,
+    }
+    return render(request,"myapp/order.html",con)     
 
-        return redirect("checkout")
 
-    else:
+def billing_address(request):
+    
+    try:
+        uid = User.objects.get(email = request.session['email'])
+        lid = Add_to_cart.objects.filter(user_id=uid).count()
+        ctid = Add_to_cart.objects.filter()
+        aid = Address.objects.filter(user_id=uid).exists()
+        add_list = Address.objects.get(user_id=uid)
+        
+        print(uid,aid,"---------------------")
+        if aid:
+            lid = Add_to_cart.objects.all()   
+            l1 = []
+            for i in lid:
+                    
+                l1.append(f"product name = {i.name} price = {i.price} quantuty = {i.quantuty} total_price = {i.total_price}......")
+                
+            add_list.list = l1 
+            add_list.save()   
+            return redirect('checkout')
+    
+    except:
+    
+        if request.POST:
+            first_name = request.POST['first_name']
+            last_name = request.POST['last_name']
+            user_name = request.POST['user_name']
+            email = request.POST['email']
+            address = request.POST['address']
+            address_2 = request.POST['address_2']
+            country = request.POST['country']
+            state = request.POST['state']
+            pincode = request.POST['pincode']
+            
+            uid = Address.objects.create(user_id=uid,
+                                        first_name=first_name,
+                                        last_name=last_name,
+                                        user_name=user_name,
+                                        email=email,
+                                        address=address,
+                                        address_2=address_2,
+                                        country=country,
+                                        state=state,
+                                        pincode=pincode)
+            
+            lid = Add_to_cart.objects.all()
+            
+            l1 = []
+            for i in lid:
+                
+                l1.append(f"product name = {i.name} price = {i.price} quantuty = {i.quantuty} total_price = {i.total_price}......")
+            
+            
+            uid.list = l1 
+            uid.save()   
+            return redirect('checkout')
 
-        return redirect("checkout")
+        else:    
+            con = {
+                'lid' : lid,
+                'ctid' : ctid
+            }
+        
+            return render(request,"myapp/billing_address.html",con)
+    
+ 
+def delete_address(request):
+    uid = User.objects.get(email = request.session['email'])
+    try:
+        did = Address.objects.get(user_id=uid).delete()
+    
+        return redirect('billing_address')    
+    except:    
+        return render(request,"myapp/billing_address.html")
+            
 
 def searchview(request):
     srch = request.GET["srch"]
@@ -374,5 +466,11 @@ def searchview(request):
     }    
     return render(request,"myapp/shop_details.html",contaxt)
 
-
-
+def category(request,id):
+    
+    mid = Add_product.objects.filter(main_id = id)
+    
+    context = {
+        'mid' : mid
+    }
+    return render(request,"myapp/category.html",context)

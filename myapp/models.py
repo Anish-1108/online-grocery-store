@@ -44,15 +44,24 @@ class Add_to_cart(models.Model):
 
 class Address(models.Model):
     user_id = models.ForeignKey(User,on_delete=models.CASCADE)
-    fist_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
-    country = models.CharField(max_length=50)
-    Saddress = models.CharField(max_length=500)
-    Aaddress = models.CharField(max_length=500)
-    town_city = models.CharField(max_length=500)
-    Country_State = models.CharField(max_length=200)
-    phon = models.IntegerField()
-    email = models.EmailField(max_length=50)
+    first_name = models.CharField(max_length=15)
+    last_name = models.CharField(max_length=15)   
+    user_name = models.CharField(max_length=10)
+    email = models.EmailField()
+    address = models.TextField()
+    address_2 = models.TextField()
+    country = models.CharField(max_length=10)
+    state = models.CharField(max_length=10)
+    pincode = models.IntegerField()
+    list = models.TextField()
+ 
+class Order(models.Model):
+    user_id = models.ForeignKey(User,on_delete=models.CASCADE)
+    name = models.CharField(max_length=30)
+    qty = models.IntegerField()
+    price = models.IntegerField()
+    
+    
 
 
 

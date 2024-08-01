@@ -39,8 +39,13 @@ urlpatterns = [
     path('remov/<str:id>', views.remov, name='remov'),
     path('add_to_cart/<str:id>', views.add_to_cart, name='add_to_cart'),
     path('blog_details/',views.blog_details,name='blog_details'),
-    path('address/',views.address,name='address'),
+    path('billing_address/',views.billing_address,name='billing_address'),
     path('searchview',views.searchview,name='searchview'),
+    path('searchview',views.searchview,name='searchview'),
+    path('category/<str:id>',views.category,name='category'),
+    path('order', views.order, name='order'),
+    path('delete_address', views.delete_address, name='delete_address'),
+    
 
 ]
 

@@ -6,11 +6,11 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="description" content="Ogani Template">
+    <meta name="description" content="FoodYard|Register">
     <meta name="keywords" content="Ogani, unica, creative, html">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Ogani | Template</title>
+    <title>Grocery | Store</title>
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
@@ -36,7 +36,7 @@
     <div class="humberger__menu__overlay"></div>
     <div class="humberger__menu__wrapper">
         <div class="humberger__menu__logo">
-            <a href="#"><img src="/static/img/logo.png" alt=""></a>
+            <a href="#"><img src="/static/img/1712243662586.png" style="width: 100px;" alt=""></a>
         </div>
        
       
@@ -61,8 +61,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-3">
-                    <div class="header__logo">
-                        <a href="/"><img src="/static/img/logo.png" alt=""></a>
+                    <div class="header__logo" style=" width: 200px; padding-left: 50px; padding-top:12px">
+                        <a href="/"><img src="/static/img/MartLogo.png"  alt=""></a>
                     </div>
                 </div>
             
@@ -114,9 +114,8 @@
     <!-- Contact Form Begin -->
     <div class="contact-form spad">
         <div class="container">
-                <form action="/login/" method="post">
-                <input type="hidden" name="csrfmiddlewaretoken" value="If1lcTR7GgTj8pteTMGXM7CKFEjz6KwqViPiMSHHVfxUNLExkiCJykkZsGE2z8hR">
-
+                <form action="{% url 'register' %}" method="post">
+                {% csrf_token %}
                 <div class="col-md-6 mx-auto">
                     <div class="">
                         <input type="email" placeholder="Your Email" name="email" required>
@@ -146,12 +145,12 @@
                 <div class="col-lg-3 col-md-6 col-sm-6">
                     <div class="footer__about">
                         <div class="footer__about__logo">
-                            <a href="/"><img src="/static/img/logo.png" alt=""></a>
+                            <a href="/"><img src="/static/img/MartLogo.png" style="width: 180px;" alt=""></a>
                         </div>
                         <ul>
-                            <li>Address: 60-49 Road 11378 New York</li>
-                            <li>Phone: +65 11.188.888</li>
-                            <li>Email: hello@colorlib.com</li>
+                            <li>Address: Naroda, Ahmedabad Gujarat</li>
+                            <li>Phone: +91 9624094666</li>
+                            <li>Email: anishmesariya1108@gmail.com</li>
                         </ul>
                     </div>
                 </div>
@@ -197,13 +196,13 @@
                 <div class="col-lg-12">
                     <div class="footer__copyright">
                         <div class="footer__copyright__text"><p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="#" target="_blank">Anish Mesariya</a>
   <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p></div>
                         <div class="footer__copyright__payment"><img src="/static/img/payment-item.png" alt=""></div>
                     </div>
                 </div>
             </div>
-        </div>
+        </div> 
     </footer>
     <!-- Footer Section End -->
 

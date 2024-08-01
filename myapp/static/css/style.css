@@ -1300,7 +1300,7 @@ ol {
 	top: 15px;
 }
 
-.product__item__pic__hover {
+.__item__pic__hover {
 	position: absolute;
 	left: 0;
 	bottom: -50px;
